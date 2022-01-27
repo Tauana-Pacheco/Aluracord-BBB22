@@ -1,35 +1,10 @@
+import React, { useState } from 'react';
 import appConfig from '../../config.json';
+import { useRouter } from 'next/router';
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 
 
-function GlobalStyle() {
-  return (
-    <style global jsx>{`
-       * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        list-style: none;
-      }
-      body {
-        font-family: 'Open Sans', sans-serif;
-      }
-      /* App fit Height */ 
-      html, body, #__next {
-        min-height: 100vh;
-        display: flex;
-        flex: 1;
-      }
-      #__next {
-        flex: 1;
-      }
-      #__next > * {
-        flex: 1;
-      }
-      /* ./App fit Height */ 
-    `}</style>
-  )
-}
+
 
 function Title(props) {
   console.log(props);
@@ -62,16 +37,18 @@ function Title(props) {
 // export default HomePage
 
 export default function PaginaInicial() {
-  const username = 'tauana-pacheco';
+  // const username = 'tauana-pacheco';
+  const [username, setUserName] = React.useState(); 
+  const routign = useRouter();
+  
 
   return (
     <>
-      <GlobalStyle />
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          backgroundColor: appConfig.theme.colors.primary[500],
-          backgroundImage: 'url(https://virtualbackgrounds.site/wp-content/uploads/2020/10/star-wars-millennium-falcon-hologame-table-1024x576.jpeg)',
+          // backgroundColor: appConfig.theme.colors.primary[''],
+          backgroundImage: 'url(https://i0.statig.com.br/bancodeimagens/3t/5d/47/3t5d47hqngmm2ilmct1cyj85s.jpg)',
           backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
         }}
       >
@@ -93,17 +70,43 @@ export default function PaginaInicial() {
           {/* Formulário */}
           <Box
             as="form"
+            onSubmit={function (e) {
+              e.preventDefault()
+              routign.push('/chat'); 
+            }}
+            
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
             }}
           >
-            <Title tag="h2">Come to the Dark Side!</Title>
+            <Title tag="h2">Bem vindes ao chat do BBB22</Title>
             <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals['050'] }}>
               {appConfig.name}
             </Text>
 
+            {/* <input 
+              type="text"
+              value={username}
+              onChange={function (e) {
+                  console.log('aqui viado', e.target.value);
+                  // kd o valor?
+                  const value = e.target.value;
+                  // quem troca o valor é o: tananana
+                  setUserName(value)
+                }
+              }
+            /> */}
+
             <TextField
+              value={username}
+              onChange={function (e) {
+                // console.log('aqui viado', e.target.value);
+                // kd o valor?
+                const value = e.target.value;
+                // quem troca o valor é o: tananana
+                setUserName(value)
+              }}
               fullWidth
               textFieldColors={{
                 neutral: {
@@ -117,6 +120,7 @@ export default function PaginaInicial() {
             <Button
               type='submit'
               label='Entrar'
+              disabled={username <= 3}
               fullWidth
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals["000"],
