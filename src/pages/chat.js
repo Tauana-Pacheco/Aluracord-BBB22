@@ -8,16 +8,24 @@ export default function ChatPage() {
 
     const hadleChange = (e) => { 
       setMessage(e.target.value) 
-      // console.log(message)
     }
 
     const getNewMessage = (newMessage) => {
+        const messageObj = {
+            id: listMessage.length + 1,
+            text: newMessage,
+            from: 'fulana',
+        }
+
         setListMessage([
+          messageObj,
           ...listMessage,
-          newMessage
         ])
         setMessage('');      
     }
+
+   
+
     
     
     /*
@@ -32,14 +40,13 @@ export default function ChatPage() {
     - [X] Lista de mensagens 
     */
     
-
     return (
       
         <Box
             styleSheet={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                backgroundColor: appConfig.theme.colors.primary[500],
-                backgroundImage: `url(https://virtualbackgrounds.site/wp-content/uploads/2020/08/the-matrix-digital-rain.jpg)`,
+                backgroundColor: appConfig.theme.colors.primary[''],
+                // backgroundImage: `url(https://virtualbackgrounds.site/wp-content/uploads/2020/08/the-matrix-digital-rain.jpg)`,
                 backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
                 color: appConfig.theme.colors.neutrals['000']
             }}
@@ -51,7 +58,7 @@ export default function ChatPage() {
                     flex: 1,
                     boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
                     borderRadius: '5px',
-                    backgroundColor: appConfig.theme.colors.neutrals[700],
+                    backgroundColor: appConfig.theme.colors.neutrals['blue'],
                     height: '100%',
                     maxWidth: '95%',
                     maxHeight: '95vh',
@@ -71,22 +78,17 @@ export default function ChatPage() {
                         padding: '16px',
                     }}
                 >
-                  
-                  List: {listMessage.map((mess) => {
-                    console.log(mess);
-                    return (
-                      <div class>
-                        {mess}
-                      </div>
-                    )
-                  })}
-                    <Box
+                
+                <MessageList mensagens={listMessage} setM={setListMessage} /> 
+
+                <Box
                         as="form"
                         styleSheet={{
                             display: 'flex',
                             alignItems: 'center',
                         }}
                     >
+                        
                         <TextField
                             value={message}
                             onChange={hadleChange}
@@ -95,7 +97,6 @@ export default function ChatPage() {
                                 e.preventDefault();
                                 getNewMessage(message);
                               }
-
                             }}
                             placeholder="Insira sua mensagem aqui..."
                             type="textarea"
@@ -110,6 +111,15 @@ export default function ChatPage() {
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+                        
+                        <Button   
+                            label = 'enviar'  
+                            value={message}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                getNewMessage(message)
+                            }}
+                        />    
                     </Box>
                 </Box>
             </Box>
@@ -136,7 +146,15 @@ function Header() {
     )
 }
 
+
+
 function MessageList(props) {
+
+    function handleRemove(id) {
+        const list = props.mensagens.filter((messageObj) => messageObj.id !== id);
+        props.setM(list);
+    }
+    
     console.log(props);
     return (
         <Box
@@ -150,10 +168,10 @@ function MessageList(props) {
                 marginBottom: '16px',
             }}
         >
-            {props.mensagens.map((mensagem) => {
+            {props.mensagens.map((messageObj) => {
                 return (
                     <Text
-                        key={mensagem.id}
+                        key={messageObj.id}
                         tag="li"
                         styleSheet={{
                             borderRadius: '5px',
@@ -177,10 +195,10 @@ function MessageList(props) {
                                     display: 'inline-block',
                                     marginRight: '8px',
                                 }}
-                                src={`https://github.com/vanessametonini.png`}
+                                src={`https://files.nsctotal.com.br/s3fs-public/styles/paragraph_image_style/public/graphql-upload-files/logo%20bbb%20nas%20redes%20sociais_10.jpg?LE6C3KFYtrUi2bBWMCwqDAzLhkzdB13D&itok=YtONjT0z`}
                             />
                             <Text tag="strong">
-                                {message}
+                                {messageObj.from}
                             </Text>
                             <Text
                                 styleSheet={{
@@ -190,13 +208,21 @@ function MessageList(props) {
                                 }}
                                 tag="span"
                             >
+                                
                                 {(new Date().toLocaleDateString())}
                             </Text>
+                            <Button
+                                label="x"
+                                onClick={() => {
+                                    handleRemove(messageObj.id)
+                                }}
+
+                            />
                         </Box>
-                        {message.texto}
+                        {messageObj.text}
                     </Text>
                 );
-            })}
+            })}   
         </Box>
     )
 }
