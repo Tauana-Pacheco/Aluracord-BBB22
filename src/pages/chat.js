@@ -1,10 +1,29 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../../config.json';
+import { createClient } from '@supabase/supabase-js';
+
+
+
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzM5NTE2MywiZXhwIjoxOTU4OTcxMTYzfQ.-SSDCl3Z6IPUSXZy_natGfT9ilyVwzO2lkYIVOlORos';
+const SUPABE_URL = 'https://ysgxykhranovcpypvazs.supabase.co';
+const supabaseClient = createClient(SUPABE_URL, SUPABASE_ANON_KEY);
+    
 
 export default function ChatPage() {
   const [message, setMessage] = React.useState('');
   const [listMessage, setListMessage] = React.useState([]);
+
+    React.useEffect(() => {
+        supabaseClient
+        .from('messages')
+        .select('*')
+        .order('id', { ascending: false})
+        .then(({ data } ) => {
+            console.log(data);
+            setListMessage(data);
+        }) //uma função
+    }, []);
 
     const hadleChange = (e) => { 
       setMessage(e.target.value) 
@@ -12,15 +31,23 @@ export default function ChatPage() {
 
     const getNewMessage = (newMessage) => {
         const messageObj = {
-            id: listMessage.length + 1,
+            //id: listMessage.length + 1,
+            de: 'fulana',
             text: newMessage,
-            from: 'fulana',
         }
 
-        setListMessage([
-          messageObj,
-          ...listMessage,
+        supabaseClient
+        .from('messages')
+        .insert([
+            messageObj
         ])
+        .then(({ data }) => {
+            console.log('criando mensagem', data);
+            setListMessage([
+                data[0],
+                ...listMessage,
+            ]);
+        });
         setMessage('');      
     }
 
@@ -198,7 +225,7 @@ function MessageList(props) {
                                 src={`https://files.nsctotal.com.br/s3fs-public/styles/paragraph_image_style/public/graphql-upload-files/logo%20bbb%20nas%20redes%20sociais_10.jpg?LE6C3KFYtrUi2bBWMCwqDAzLhkzdB13D&itok=YtONjT0z`}
                             />
                             <Text tag="strong">
-                                {messageObj.from}
+                                {messageObj.de}
                             </Text>
                             <Text
                                 styleSheet={{
