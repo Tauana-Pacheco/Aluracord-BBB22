@@ -85,26 +85,10 @@ export default function PaginaInicial() {
               {appConfig.name}
             </Text>
 
-            {/* <input 
-              type="text"
-              value={username}
-              onChange={function (e) {
-                  console.log('aqui viado', e.target.value);
-                  // kd o valor?
-                  const value = e.target.value;
-                  // quem troca o valor é o: tananana
-                  setUserName(value)
-                }
-              }
-            /> */}
-
             <TextField
               value={username}
-              onChange={function (e) {
-                // console.log('aqui viado', e.target.value);
-                // kd o valor?
-                const value = e.target.value;
-                // quem troca o valor é o: tananana
+              onChange={(e) => {
+                const { value }= e.target;
                 setUserName(value)
               }}
               fullWidth
